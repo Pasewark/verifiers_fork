@@ -599,7 +599,7 @@ class GRPOTrainer(Trainer):
                 data_collator, description="training"
             )
 
-        batch_size = self._train_batch_size * self.gradient_accumulation_steps  # type: ignore
+        batch_size = self._train_batch_size #* self.gradient_accumulation_steps  # type: ignore
 
         dataloader_params = {
             "batch_size": batch_size,  # type: ignore (None case handled by config __post_init__)
@@ -655,7 +655,7 @@ class GRPOTrainer(Trainer):
             data_source=self.train_dataset,  # type: ignore
             mini_repeat_count=self.num_generations,
             batch_size=self.generation_batch_size // self.num_generations,
-            repeat_count=self.num_iterations * self.gradient_accumulation_steps,
+            repeat_count=self.num_iterations,# * self.gradient_accumulation_steps,
             shuffle=self.shuffle_dataset,
             seed=self.args.seed,
         )
@@ -945,7 +945,7 @@ class GRPOTrainer(Trainer):
         # Ensure all processes are synchronized at the start
         self.accelerator.wait_for_everyone()
         # inputs = list of dicts for all gradient accumulation steps
-        generate_every = self.gradient_accumulation_steps * self.num_iterations
+        generate_every = self.num_iterations #self.gradient_accumulation_steps * self.num_iterations
 
         # Check if we need to generate new completions
         if self._step % generate_every == 0 or self._buffered_inputs is None:
