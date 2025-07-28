@@ -208,7 +208,7 @@ class BanditEnv(MultiTurnEnv):
         user_prompt = (f"Reward for your last response is {reward}. "
                        f"Pick an integer between 0 and {self.n_arms-1} inclusive.")
 
-        return {"role": "user", "content": user_prompt}, state
+        return [{"role": "user", "content": user_prompt}], state
 
     def is_completed(self, messages, state, **_):
         if 'turn_rewards' not in state: return False
